@@ -9,7 +9,7 @@ import org.camunda.bpm.engine.impl.persistence.entity.JobEntity;
 @Log
 public class MyJobRetryCmd extends DefaultJobRetryCmd {
 
-    public static final String NORETRY_MSG = "noretry";
+    public static final String NO_RETRY_MSG = "no_retry";
 
     public MyJobRetryCmd(String jobId, Throwable exception) {
         super(jobId, exception);
@@ -17,9 +17,8 @@ public class MyJobRetryCmd extends DefaultJobRetryCmd {
 
     public Object execute(CommandContext commandContext) {
         log.info("Executing MyJobRetryCmd for job" + jobId + "and exception message" + exception.getMessage());
-        if (super.exception.getMessage().equals(NORETRY_MSG)) {
-            new NoRetriesJobRetryCmd(jobId, exception).execute(commandContext);
-            return null;
+        if (super.exception.getMessage().equals(NO_RETRY_MSG)) {
+            return new NoRetriesJobRetryCmd(jobId, exception).execute(commandContext);
         } else {
             return super.execute(commandContext);
         }
